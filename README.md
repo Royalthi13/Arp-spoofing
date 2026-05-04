@@ -15,7 +15,7 @@ Tres máquinas virtuales en VirtualBox bajo red interna `arp-lab`, emulando un s
 | Kali Linux | Atacante | 192.168.1.110 |
 | Windows 7 | Víctima | 192.168.1.120 |
 
-> **¿Por qué Red Interna?** En una red conmutada (switch), el tráfico es unicast directo entre nodos. Un sniffer pasivo no capturaría el tráfico ajeno — el ataque MitM es estrictamente necesario para interceptarlo.
+> **¿Por qué Red Interna?** En una red conmutada , el tráfico es unicast directo entre nodos. Un sniffer pasivo no capturaría el tráfico ajeno  por eso el ataque MitM es estrictamente necesario para interceptarlo.
 
 El Ubuntu Server actúa como gateway con IP forwarding habilitado (`net.ipv4.ip_forward=1` en `/etc/sysctl.conf`), lo que le permite enrutar paquetes entre los nodos en lugar de descartarlos.
 
@@ -23,7 +23,7 @@ El Ubuntu Server actúa como gateway con IP forwarding habilitado (`net.ipv4.ip_
 
 ## Requisitos
 
-- Python 3.x
+- Python 
 - Scapy
 - Rich
 
@@ -94,7 +94,7 @@ Monitoriza el tráfico ARP de la red y detecta cambios en las asociaciones IP↔
 sudo python3 ids_arp.py
 ```
 
-> ⚠️ **Orden importante:** el IDS debe arrancar *antes* que el atacante para aprender la línea base legítima. Si el ataque ya está activo al iniciar el IDS, aprenderá las MACs envenenadas como válidas y no detectará nada.
+>  **Orden importante:** el IDS debe arrancar *antes* que el atacante para aprender la línea base legítima. Si el ataque ya está activo al iniciar el IDS, aprenderá las MACs envenenadas como válidas y no detectará nada.
 
 ---
 
@@ -125,12 +125,7 @@ Víctima (W7) ──ARP envenenado──▶ Kali (MitM) ──IP Forward──�
 sudo tcpdump -i eth0 -vv -A host 192.168.1.120 and port 80
 ```
 
-Resultado visible en la captura: `user=adrian&pass=123456781`
+
 
 La víctima solo ve el Error 500 y no sospecha nada.
 
----
-
-## Conclusión
-
-El laboratorio demuestra de forma práctica por qué el tráfico HTTP sin cifrado es inseguro en una red local, y cómo un IDS por anomalías puede detectar el ataque que lo hace posible. La contramedida más efectiva a nivel de aplicación es usar HTTPS, que cifra el payload y hace ilegible la captura de tcpdump aunque el MitM siga activo.
